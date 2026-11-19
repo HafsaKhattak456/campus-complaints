@@ -25,35 +25,46 @@ function ComplaintEditor({ complaint, teams, statuses, api, onSaved }) {
 
   return (
     <li>
-      <h3>{complaint.category}</h3>
-      <p>{complaint.location}</p>
-      <p className="description">{complaint.description}</p>
-      <p>Reported by {complaint.student ? complaint.student.name + ' (' + complaint.student.email + ')' : 'Unavailable'}</p>
-      {complaint.feedback && <p className="description">
-        <strong>Student feedback · {complaint.feedback.rating}/5</strong>
-        {complaint.feedback.comment && <><br />{complaint.feedback.comment}</>}
-      </p>}
-      <small>Complaint ID {complaint.id}</small>
-      <form onSubmit={save}>
-        <fieldset disabled={pending}>
-          <label htmlFor={complaint.id + '-team'}>Assigned team</label>
-          <select id={complaint.id + '-team'} name="assignedTeam" defaultValue={complaint.assignedTeam}>
-            <option value="">Unassigned</option>
-            {teams.map((team) => <option key={team}>{team}</option>)}
-          </select>
-          <label htmlFor={complaint.id + '-status'}>Status</label>
-          <select id={complaint.id + '-status'} name="status" defaultValue={complaint.status}>
-            {statuses.map((status) => <option key={status}>{status}</option>)}
-          </select>
-          <label htmlFor={complaint.id + '-note'}>Student-visible note</label>
-          <textarea id={complaint.id + '-note'} name="resolutionNote"
-            defaultValue={complaint.resolutionNote} rows={3} maxLength={1000} />
-          <small>Required when resolving or rejecting a complaint.</small>
-          <button>{pending ? 'Saving…' : 'Save changes'}</button>
-        </fieldset>
-        {message && <p role="status" className="notice">{message}</p>}
-        {error && <p role="alert" className="error">{error}</p>}
-      </form>
+      <details name="admin-complaint">
+        <summary>
+          <span className="complaint-summary">
+            <span>
+              <strong>{complaint.category}</strong>
+              <small>{complaint.location} · {complaint.assignedTeam || 'Unassigned'}</small>
+            </span>
+            <span className="complaint-status" data-status={complaint.status}>{complaint.status}</span>
+          </span>
+        </summary>
+        <div className="complaint-editor">
+          <p className="description">{complaint.description}</p>
+          <p>Reported by {complaint.student ? complaint.student.name + ' (' + complaint.student.email + ')' : 'Unavailable'}</p>
+          {complaint.feedback && <p className="description">
+            <strong>Student feedback · {complaint.feedback.rating}/5</strong>
+            {complaint.feedback.comment && <><br />{complaint.feedback.comment}</>}
+          </p>}
+          <small>Complaint ID {complaint.id}</small>
+          <form onSubmit={save}>
+            <fieldset disabled={pending}>
+              <label htmlFor={complaint.id + '-team'}>Assigned team</label>
+              <select id={complaint.id + '-team'} name="assignedTeam" defaultValue={complaint.assignedTeam}>
+                <option value="">Unassigned</option>
+                {teams.map((team) => <option key={team}>{team}</option>)}
+              </select>
+              <label htmlFor={complaint.id + '-status'}>Status</label>
+              <select id={complaint.id + '-status'} name="status" defaultValue={complaint.status}>
+                {statuses.map((status) => <option key={status}>{status}</option>)}
+              </select>
+              <label htmlFor={complaint.id + '-note'}>Student-visible note</label>
+              <textarea id={complaint.id + '-note'} name="resolutionNote"
+                defaultValue={complaint.resolutionNote} rows={3} maxLength={1000} />
+              <small>Required when resolving or rejecting a complaint.</small>
+              <button>{pending ? 'Saving…' : 'Save changes'}</button>
+            </fieldset>
+            {message && <p role="status" className="notice">{message}</p>}
+            {error && <p role="alert" className="error">{error}</p>}
+          </form>
+        </div>
+      </details>
     </li>
   );
 }
@@ -107,17 +118,19 @@ export function AdminComplaints({ api }) {
   if (!data) return <p role="status">Loading complaints…</p>;
 
   return (
-    <div className="dashboard-block">
+    <div className="admin-layout">
       <ComplaintStatistics {...data} />
-      <h2>Complaint queue</h2>
-      {data.complaints.length === 0 ? <p>No complaints have been submitted yet.</p> : (
-        <ul className="complaints">
-          {data.complaints.map((complaint) => (
-            <ComplaintEditor key={complaint.id} complaint={complaint}
-              statuses={data.statuses} teams={data.teams} api={api} onSaved={updateComplaint} />
-          ))}
-        </ul>
-      )}
+      <section className="admin-queue" aria-labelledby="queue-title">
+        <h2 id="queue-title">Complaint queue</h2>
+        {data.complaints.length === 0 ? <p>No complaints have been submitted yet.</p> : (
+          <ul className="complaints">
+            {data.complaints.map((complaint) => (
+              <ComplaintEditor key={complaint.id} complaint={complaint}
+                statuses={data.statuses} teams={data.teams} api={api} onSaved={updateComplaint} />
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

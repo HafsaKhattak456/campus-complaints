@@ -97,9 +97,9 @@ export function StudentComplaints({ api }) {
   if (loadError) return <p role="alert" className="error">{loadError}</p>;
 
   return (
-    <>
-      <div className="dashboard-block">
-        <h2>Report a campus issue</h2>
+    <div className="student-layout">
+      <section aria-labelledby="report-title">
+        <h2 id="report-title">Report a campus issue</h2>
         <form onSubmit={submit}>
           <label htmlFor="category">Category</label>
           <select id="category" name="category" defaultValue="" required>
@@ -116,30 +116,40 @@ export function StudentComplaints({ api }) {
           {notice && <p role="status" className="notice">{notice}</p>}
           <button disabled={submitting}>{submitting ? 'Submitting…' : 'Submit complaint'}</button>
         </form>
-      </div>
-      <div className="dashboard-block">
-        <h2>My complaints</h2>
+      </section>
+      <section className="student-history" aria-labelledby="history-title">
+        <h2 id="history-title">My complaints</h2>
         {complaints.length === 0 ? <p>You haven’t submitted any complaints yet.</p> : (
           <ul className="complaints">
             {complaints.map((complaint) => (
               <li key={complaint.id}>
-                <div className="complaint-heading">
-                  <h3>{complaint.category}</h3>
-                  <span className="complaint-status">{complaint.status}</span>
-                </div>
-                <p>{complaint.location} · <time dateTime={complaint.createdAt}>
-                  {new Date(complaint.createdAt).toLocaleDateString()}
-                </time></p>
-                <p className="description">{complaint.description}</p>
-                {complaint.assignedTeam && <p>Assigned to {complaint.assignedTeam}</p>}
-                {complaint.resolutionNote && <p className="description"><strong>Admin note</strong><br />{complaint.resolutionNote}</p>}
-                <small>Complaint ID {complaint.id}</small>
-                <ComplaintFeedback complaint={complaint} api={api} onSaved={updateComplaint} />
+                <details name="student-complaint">
+                  <summary>
+                    <span className="complaint-summary">
+                      <span>
+                        <strong>{complaint.category}</strong>
+                        <small>{complaint.location} · <time dateTime={complaint.createdAt}>
+                          {new Date(complaint.createdAt).toLocaleDateString()}
+                        </time></small>
+                      </span>
+                      <span className="complaint-status" data-status={complaint.status}>{complaint.status}</span>
+                    </span>
+                  </summary>
+                  <div className="complaint-editor">
+                    <p className="description">{complaint.description}</p>
+                    {complaint.assignedTeam && <p>Assigned to {complaint.assignedTeam}</p>}
+                    {complaint.resolutionNote && <p className="description">
+                      <strong>Admin note</strong><br />{complaint.resolutionNote}
+                    </p>}
+                    <small>Complaint ID {complaint.id}</small>
+                    <ComplaintFeedback complaint={complaint} api={api} onSaved={updateComplaint} />
+                  </div>
+                </details>
               </li>
             ))}
           </ul>
         )}
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

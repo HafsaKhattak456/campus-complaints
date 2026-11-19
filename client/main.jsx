@@ -99,13 +99,22 @@ function Dashboard({ user, onLogout }) {
     }
   }
 
+  const signOut = (
+    <button onClick={logout} disabled={pending}>{pending ? 'Signing out…' : 'Sign out'}</button>
+  );
+
   return (
     <>
-      <h1 id="title">{title}</h1>
-      <p>Signed in as {user.name} ({user.email}).</p>
-      {isAdmin ? title === 'Admin dashboard' && <AdminComplaints api={api} /> : <StudentComplaints api={api} />}
+      <header className="dashboard-header">
+        <div>
+          <h1 id="title">{title}</h1>
+          <p>Signed in as {user.name} ({user.email}).</p>
+        </div>
+        {signOut}
+      </header>
       {error && <p role="alert" className="error">{error}</p>}
-      <button onClick={logout} disabled={pending}>{pending ? 'Signing out…' : 'Sign out'}</button>
+      {isAdmin ? title === 'Admin dashboard' && <AdminComplaints api={api} />
+        : <StudentComplaints api={api} />}
     </>
   );
 }
@@ -131,7 +140,7 @@ function App() {
   }
 
   return (
-    <main>
+    <main className={user ? 'dashboard-shell' : undefined}>
       <p className="brand">Smart Campus Complaints</p>
       <section aria-labelledby="title">
         {loading ? <h1 id="title">Checking session…</h1>

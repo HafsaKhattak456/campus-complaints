@@ -33,9 +33,6 @@ button.secondary {
   padding-inline: 0;
   text-decoration: underline;
 }
-.dashboard-block { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #d3dfd7; }
-.dashboard-block h2 { margin: 0; font-size: 1.25rem; }
-.dashboard-block form { margin-top: .85rem; }
 select, textarea {
   font: inherit;
   color: inherit;
@@ -55,8 +52,6 @@ textarea { resize: vertical; }
   border-radius: .6rem;
   overflow-wrap: anywhere;
 }
-.complaint-heading { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
-.complaint-heading h3 { font-size: 1rem; margin: 0; }
 .complaint-status { background: #f8edcf; color: #624806; border-radius: .4rem; padding: .15rem .45rem; }
 .complaints p { margin: .45rem 0; }
 .description { white-space: pre-wrap; }
@@ -72,3 +67,51 @@ textarea { resize: vertical; }
 .category-table th, .category-table td { border-bottom: 1px solid #d3dfd7; padding: .35rem; }
 .category-table tbody th { font-weight: 400; }
 .category-table td, .category-table thead th:last-child { text-align: right; }
+
+.dashboard-shell { max-width: 92rem; margin: 1.5rem auto; }
+.dashboard-shell > .brand { margin: 0 0 .75rem; }
+.dashboard-shell > section { padding: clamp(1rem, 2vw, 1.6rem); }
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .8rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #d3dfd7;
+}
+.dashboard-header h1 { font-size: clamp(1.65rem, 3vw, 2.25rem); }
+.dashboard-header p { margin: .35rem 0 0; overflow-wrap: anywhere; }
+.dashboard-header button { margin: 0; }
+.student-layout, .admin-layout { display: grid; gap: 1.25rem; padding-top: 1rem; }
+.student-layout > section, .admin-layout > section { min-width: 0; padding: 1rem; margin: 0; border: 1px solid #d3dfd7; border-radius: .75rem; }
+.student-layout h2, .admin-layout h2 { font-size: 1.2rem; margin: 0; }
+.student-history .complaints, .admin-queue .complaints { margin: .75rem 0 0; }
+.student-history .complaints li, .admin-queue .complaints li { padding: 0; }
+.student-history summary, .admin-queue summary { padding: .75rem; cursor: pointer; }
+.student-history summary::marker, .admin-queue summary::marker { color: #155647; }
+.complaint-summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .35rem .75rem;
+  width: calc(100% - 1.5rem);
+  vertical-align: middle;
+}
+.complaint-summary small { display: block; }
+.complaint-status[data-status="Resolved"] { background: #e7f5eb; color: #155647; }
+.complaint-status[data-status="In Progress"] { background: #e9f0fa; color: #254675; }
+.complaint-status[data-status="Rejected"] { background: #fae8e7; color: #882727; }
+.complaint-editor { padding: .75rem; border-top: 1px solid #d3dfd7; }
+.complaint-editor form { margin-top: .75rem; }
+.complaint-editor button { justify-self: start; margin-top: .65rem; }
+
+.student-layout section { overflow-wrap: anywhere; }
+.student-layout form { margin-top: .85rem; }
+.student-layout form > button { justify-self: start; }
+
+@media (min-width: 56rem) {
+  .student-layout { grid-template-columns: minmax(20rem, 1fr) minmax(0, 1.6fr); align-items: start; }
+  .admin-layout { grid-template-columns: minmax(17rem, 1fr) minmax(0, 2fr); align-items: start; }
+}
